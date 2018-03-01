@@ -11,9 +11,7 @@ router.post('/publish', async (ctx, next)=> {
   let articleDoc= new ArticleModel(params);
   let result='';
   try {
-    console.log('----------save-----------')
     result=await articleDoc.save();
-    console.log('----------save after-----------')
     ctx.body={code:'S'}
   } catch (error) {
     ctx.body={code:'E',msg:'error'}
@@ -22,14 +20,33 @@ router.post('/publish', async (ctx, next)=> {
 
 router.get('/list', async (ctx, next)=> {
   let result='';
-  let articleDoc= new ArticleModel(ctx.params);
   try {
-    result=await articleDoc.find({author:'test'})
+    result=await ArticleModel.find(ctx.request.body).limit(8)
     ctx.body=result
   } catch (error) {
     throw new Error(error);
   }
-  
+})
+
+router.delete('/delete',async (ctx ,next)=>{
+  let params=ctx.request.body;
+  console.log(params)
+  try {
+    let result=await ArticleModel.remove({_id:params._id});
+    ctx.body={code:'S',data:result};
+  } catch (error) {
+    ctx.body={code:'E',msg:e};
+  }
+})
+
+router.put('/edit',async (ctx ,next)=>{
+  let params=ctx.request.body;
+  try {
+    let result=await ArticleModel.update({_id:params._id},params);
+    ctx.body={code:'S',data:result};
+  } catch (error) {
+    ctx.body={code:'E',msg:e};
+  }
 })
 
 module.exports = router
