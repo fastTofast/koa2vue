@@ -12,7 +12,8 @@ let articleSchema=new Schema({
     class:String,
     content:String,
     creationDate:String,
-    title:String
+    title:String,
+    articleHeader:String
 })
 const articleModel=mongoose.model('article',articleSchema);
 

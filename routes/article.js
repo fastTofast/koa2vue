@@ -19,13 +19,19 @@ router.post('/publish', async (ctx, next)=> {
 })
 
 router.get('/list', async (ctx, next)=> {
-  let result='';
-  try {
-    result=await ArticleModel.find(ctx.request.body).limit(8)
-    ctx.body=result
-  } catch (error) {
-    throw new Error(error);
-  }
+   let params= ctx.request.query;
+   let currentPage=Number(params.currentPage);
+   let pageSize=Number(params.pageSize);
+   let startIndex=pageSize*(currentPage-1);
+   let showField='author tags class creationDate title articleHeader'
+   //分页查询
+    let [result,total]=await Promise.all([
+      ArticleModel.find({},showField).skip(startIndex).limit(pageSize),
+      ArticleModel.count()
+    ]).catch (error=>{
+      throw new Error(error)
+    }) 
+    ctx.body={total,result}
 })
 
 router.delete('/delete',async (ctx ,next)=>{

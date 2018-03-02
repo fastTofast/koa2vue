@@ -18,7 +18,16 @@ app.use(bodyparser({
 }))
 app.use(json())
 app.use(logger())
-app.use(require('koa-static')(__dirname + '/public',{maxage:604800000}))
+app.use(require('koa-static')(__dirname + '/public',{
+  setHeaders:function(res, path, stats) {
+    //index让它每次都询问服务器是否有更新
+    if (path.indexOf('front\\dist\\index.html')>0) {
+      res.setHeader('Cache-Control','no-cache');
+    } else {
+      res.setHeader('Cache-Control','maxage=604800000');
+    }
+  }
+}))
 
 app.use(views(__dirname + '/views', {
   extension: 'pug'
