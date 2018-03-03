@@ -16,6 +16,23 @@ app.use(cors());
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
+//是否登录
+app.use(async (ctx,next)=>{
+  if (ctx.url.indexOf('/koa2vue/service/')!=-1) {
+    let cookies=ctx.request.header.cookie;
+    console.log(ctx.request.header)
+    let regExp=new RegExp('(^| )vuid=([^;]*)(;|$)')
+    let result=cookies?cookies.match(regExp):null;
+    if (result&&result[2]) {
+      await next();
+    } else {
+      console.log('--------------'+ctx.url)
+      ctx.res.redirect('/#/login');
+    } 
+  } else {
+    await next();
+  }
+})
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public',{
@@ -42,6 +59,7 @@ app.use(async (ctx, next) => {
 })
 
 // routes
+
 app.use(index.routes(), index.allowedMethods())
 app.use(article.routes(), article.allowedMethods())
 

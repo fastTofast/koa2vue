@@ -1,7 +1,7 @@
 const router = require('koa-router')()
-const ArticleModel=require('../mongodb/articeDao')
+const Model=require('../mongodb/articeDao')
 router.prefix('/koa2vue/service/article')
-
+const ArticleModel=Model.ArticleModel;
 router.post('/publish', async (ctx, next)=> {
   let params=ctx.request.body;
   if(params.content&&params.content.length>1024*1024){
@@ -33,10 +33,17 @@ router.get('/list', async (ctx, next)=> {
     }) 
     ctx.body={total,result}
 })
-
+router.get('/detail', async (ctx, next)=> {
+  let params= ctx.request.query;
+  //分页查询
+    let result=await ArticleModel.findById(params._id,'content')
+    .catch (error=>{
+     throw new Error(error)
+   }) 
+   ctx.body=result
+})
 router.delete('/delete',async (ctx ,next)=>{
   let params=ctx.request.body;
-  console.log(params)
   try {
     let result=await ArticleModel.remove({_id:params._id});
     ctx.body={code:'S',data:result};

@@ -15,6 +15,12 @@ let articleSchema=new Schema({
     title:String,
     articleHeader:String
 })
-const articleModel=mongoose.model('article',articleSchema);
+const ArticleModel=mongoose.model('article',articleSchema);
 
-module.exports= articleModel
+let userSchema=new Schema({
+    userName:String,
+    password:String
+})
+const UserModel=mongoose.model('user',userSchema);
+
+module.exports= {ArticleModel,UserModel}
