@@ -26,8 +26,9 @@ router.post('/login', async (ctx, next) => {
       let user= await userModel.save(userModel);
       var md5_v1 = crypto.createHash('md5'); 
       var auth = md5_v1.update(result+'vuser'+params.userName).digest('hex'); 
-      ctx.res.setHeader('Set-Cookie',
-      [`vuid='${result}'`, `vuser='${params.userName}'`,`auth='${auth}'`]);
+      ctx.cookies.set('vuid', result,{path:'/',httpOnly:false});
+      ctx.cookies.set('auth', auth,{path:'/',httpOnly:false});
+      ctx.cookies.set('vuser', params.userName,{path:'/',httpOnly:false});
       ctx.body = {code:'S',user:user};
     } catch (error) {
       ctx.body = {code:'E',msg:error}

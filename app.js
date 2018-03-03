@@ -36,6 +36,9 @@ app.use(async (ctx,next)=>{
       var md5 = crypto.createHash('md5'); 
       let auth2 = md5.update(vuid+'vuser'+vuser).digest('hex'); 
       if (auth==auth2) {
+        ctx.cookies.set('vuid', vuid,{path:'/',maxAge: 2*60*60*1000});
+        ctx.cookies.set('auth', auth,{path:'/',maxAge: 2*60*60*1000});
+        ctx.cookies.set('vuser', vuser,{path:'/',maxAge: 2*60*60*1000});
         await next();
       } else {
         ctx.body={code:"E",msg:"请先登录",redirect:'login'}
