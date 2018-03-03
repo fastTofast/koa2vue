@@ -29,7 +29,7 @@ app.use(async (ctx,next)=>{
       let regStr='(^| )'+name+'=([^;]*)(;|$)'
       let regExp=new RegExp(regStr);
         var result=cookies.match(regExp)
-        return result?result:[];
+        return result?result[2]:[];
     }
     let [vuid,vuser,auth]=[getCookie('vuid'),getCookie('vuser'),getCookie('auth')];
     if (auth) {

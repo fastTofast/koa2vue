@@ -1,14 +1,9 @@
 const router = require('koa-router')()
 const Model=require('../mongodb/articeDao')
-router.prefix('/publicService')
 var crypto = require('crypto');
+router.prefix('/koa2vue/publicService')
 const UserModel=Model.UserModel;
 const ArticleModel=Model.ArticleModel;
-router.get('/', async (ctx, next) => {
-  await ctx.render('index', {
-    title: 'Hello Koa 2!'
-  })
-})
 
 router.post('/login', async (ctx, next) => {
   params=ctx.request.body;

@@ -1,9 +1,14 @@
 const router = require('koa-router')()
 const Model=require('../mongodb/articeDao')
-router.prefix('/koa2vue/service/article')
+router.prefix('/koa2vue/service')
 const ArticleModel=Model.ArticleModel;
-router.post('/publish', async (ctx, next)=> {
+router.post('/article/publish', async (ctx, next)=> {
   let params=ctx.request.body;
+  let cookies=ctx.request.header.cookie;
+  let regStr='(^| )'+name+'=([^;]*)(;|$)'
+  let regExp=new RegExp(regStr);
+  var cookie=cookies.match(regExp);
+  params.author=cookie[2];//此处不用判断，之前的中间件以及判断过
   if(params.content&&params.content.length>1024*1024){
     ctx.body={code:'E',msg:'内容太大，请减小'}
     return;
@@ -18,7 +23,7 @@ router.post('/publish', async (ctx, next)=> {
   }
 })
 
-router.get('/list', async (ctx, next)=> {
+router.get('/article/list', async (ctx, next)=> {
    let params= ctx.request.query;
    let currentPage=Number(params.currentPage);
    let pageSize=Number(params.pageSize);
@@ -33,7 +38,7 @@ router.get('/list', async (ctx, next)=> {
     }) 
     ctx.body={total,result}
 })
-router.delete('/delete',async (ctx ,next)=>{
+router.delete('/article/delete',async (ctx ,next)=>{
   let params=ctx.request.body;
   try {
     let result=await ArticleModel.remove({_id:params._id});
@@ -43,7 +48,7 @@ router.delete('/delete',async (ctx ,next)=>{
   }
 })
 
-router.put('/edit',async (ctx ,next)=>{
+router.put('/article/edit',async (ctx ,next)=>{
   let params=ctx.request.body;
   try {
     let result=await ArticleModel.update({_id:params._id},params);
