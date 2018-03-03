@@ -33,15 +33,6 @@ router.get('/list', async (ctx, next)=> {
     }) 
     ctx.body={total,result}
 })
-router.get('/detail', async (ctx, next)=> {
-  let params= ctx.request.query;
-  //分页查询
-    let result=await ArticleModel.findById(params._id,'content')
-    .catch (error=>{
-     throw new Error(error)
-   }) 
-   ctx.body=result
-})
 router.delete('/delete',async (ctx ,next)=>{
   let params=ctx.request.body;
   try {

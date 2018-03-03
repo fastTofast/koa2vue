@@ -1,16 +1,19 @@
 const router = require('koa-router')()
 const Model=require('../mongodb/articeDao')
+router.prefix('/publicService')
 var crypto = require('crypto');
 const UserModel=Model.UserModel;
+const ArticleModel=Model.ArticleModel;
 router.get('/', async (ctx, next) => {
   await ctx.render('index', {
     title: 'Hello Koa 2!'
   })
 })
 
-router.get('/login', async (ctx, next) => {
+router.post('/login', async (ctx, next) => {
   params=ctx.request.body;
-  if (!params||!params.userName||params.password) {
+  console.log(params);
+  if (!params||!params.userName||!params.password) {
     ctx.body = {code:'E',msg:'密码或账号不能为空'}
   } else {
     var md5 = crypto.createHash('md5'); 
@@ -19,19 +22,28 @@ router.get('/login', async (ctx, next) => {
       userName:params.userName,
       password:result
     })
-    console.log(result);
     try {
-     let user= await userModel.save(userModel);
-     var auth = md5.update(result+'user'+userName).digest('hex'); 
-     ctx.res.setHeader('Set-Cookie', 
-      ['vuid='+result, 'uuser='+userName,'auth='+auth]);
-     ctx.body = {code:'S',user:user};
+      let user= await userModel.save(userModel);
+      var md5_v1 = crypto.createHash('md5'); 
+      var auth = md5_v1.update(result+'vuser'+params.userName).digest('hex'); 
+      ctx.res.setHeader('Set-Cookie',
+      [`vuid='${result}'`, `vuser='${params.userName}'`,`auth='${auth}'`]);
+      ctx.body = {code:'S',user:user};
     } catch (error) {
       ctx.body = {code:'E',msg:error}
+      throw error
     }
   }
 })
-
+router.get('/article/detail', async (ctx, next)=> {
+  let params= ctx.request.query;
+  //分页查询
+    let result=await ArticleModel.findById(params._id,'content')
+    .catch (error=>{
+     throw new Error(error)
+   }) 
+   ctx.body=result
+})
 router.get('/json', async (ctx, next) => {
   ctx.body = {
     title: 'koa2 json'

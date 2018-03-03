@@ -8,7 +8,7 @@ const logger = require('koa-logger')
 const cors =require('koa-cors')
 const index = require('./routes/index')
 const article = require('./routes/article')
-
+var crypto = require('crypto');
 // error handler
 onerror(app)
 app.use(cors());
@@ -20,14 +20,25 @@ app.use(bodyparser({
 app.use(async (ctx,next)=>{
   if (ctx.url.indexOf('/koa2vue/service/')!=-1) {
     let cookies=ctx.request.header.cookie;
-    console.log(ctx.request.header)
-    let regExp=new RegExp('(^| )vuid=([^;]*)(;|$)')
-    let result=cookies?cookies.match(regExp):null;
-    if (result&&result[2]) {
-      await next();
+    console.log(cookies)
+    let getCookie=function(name){
+      let regStr='(^| )'+name+'=([^;]*)(;|$)'
+      let regExp=new RegExp(regStr);
+      let result=cookies?cookies.match(regExp):[];
+      return result[2];
+    }
+    let [vuid,vuser,auth]=[getCookie('vuid'),getCookie('vuser'),getCookie('auth')];
+    if (auth) {
+      var md5 = crypto.createHash('md5'); 
+      let auth2 = md5.update(vuid+'vuser'+vuser).digest('hex'); 
+      if (auth==auth2) {
+        await next();
+      } else {
+        ctx.body={code:"E",msg:"请先登录",redirect:'login'}
+      }
     } else {
       console.log('--------------'+ctx.url)
-      ctx.response.redirect('/koa2vue/front/dist/index.html#/login');
+      ctx.body={code:"E",msg:"请先登录",redirect:'login'}
     } 
   } else {
     await next();
