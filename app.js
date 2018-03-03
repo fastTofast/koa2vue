@@ -27,7 +27,7 @@ app.use(async (ctx,next)=>{
       await next();
     } else {
       console.log('--------------'+ctx.url)
-      ctx.res.redirect('/#/login');
+      ctx.response.redirect('/koa2vue/front/dist/index.html#/login');
     } 
   } else {
     await next();
