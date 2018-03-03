@@ -21,11 +21,15 @@ app.use(async (ctx,next)=>{
   if (ctx.url.indexOf('/koa2vue/service/')!=-1) {
     let cookies=ctx.request.header.cookie;
     console.log(cookies)
+    if (!cookies) {
+      ctx.body={code:"E",msg:"请先登录",redirect:'login'}
+      return;
+    }
     let getCookie=function(name){
       let regStr='(^| )'+name+'=([^;]*)(;|$)'
       let regExp=new RegExp(regStr);
-      let result=cookies?cookies.match(regExp):[];
-      return result[2];
+        var result=cookies.match(regExp)
+        return result?result:[];
     }
     let [vuid,vuser,auth]=[getCookie('vuid'),getCookie('vuser'),getCookie('auth')];
     if (auth) {
