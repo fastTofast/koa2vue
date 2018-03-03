@@ -8,7 +8,7 @@ router.get('/', async (ctx, next) => {
   })
 })
 
-router.get('/koa2vue/login', async (ctx, next) => {
+router.get('/login', async (ctx, next) => {
   params=ctx.request.body;
   if (!params||!params.userName||params.password) {
     ctx.body = {code:'E',msg:'密码或账号不能为空'}
