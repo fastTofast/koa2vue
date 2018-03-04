@@ -31,7 +31,7 @@ app.use(async (ctx,next)=>{
     //     var result=cookies.match(regExp)
     //     return result?result[2]:[];
     // }
-    let [vuid,vuser,auth]=[ctx.cookie.get('vuid'),ctx.cookie.get('vuser'),ctx.cookie.get('auth')];
+    let [vuid,vuser,auth]=[ctx.cookies.get('vuid'),ctx.cookies.get('vuser'),ctx.cookies.get('auth')];
     if (!vuid||!vuser||!auth) {
       ctx.body={code:"E",msg:"请先登录",redirect:'login'}
     } else {

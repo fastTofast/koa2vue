@@ -26,12 +26,12 @@ router.get('/article/list', async (ctx, next)=> {
    let startIndex=pageSize*(currentPage-1);
    let showField='author tags class creationDate title articleHeader'
    let condition={
-     userNmae:ctx.cookies.get('vuser'),
+     author:ctx.cookies.get('vuser'),
    }
    //分页查询
    let [result,total]=await Promise.all([
      ArticleModel.find(condition,showField).skip(startIndex).limit(pageSize),
-     ArticleModel.count()
+     ArticleModel.count(condition)
     ]).catch (error=>{
       throw new Error(error)
     }) 
@@ -51,7 +51,7 @@ router.delete('/article/delete',async (ctx ,next)=>{
 router.put('/article/edit',async (ctx ,next)=>{
   let params=ctx.request.body;
   try {
-    let result=await ArticleModel.update({_id:params._id},params);
+    let result=await ArticleModel.update({_id:params._id},{$set:params});
     ctx.body={code:'S',data:result};
   } catch (error) {
     ctx.body={code:'E',msg:error};
