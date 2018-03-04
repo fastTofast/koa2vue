@@ -19,20 +19,22 @@ app.use(bodyparser({
 //是否登录
 app.use(async (ctx,next)=>{
   if (ctx.url.indexOf('/koa2vue/service/')!=-1) {
-    let cookies=ctx.request.header.cookie;
-    console.log(cookies)
-    if (!cookies) {
+    // let cookies=ctx.request.header.cookie;
+    // console.log(cookies)
+    // if (!cookies) {
+    //   ctx.body={code:"E",msg:"请先登录",redirect:'login'}
+    //   return;
+    // }
+    // let getCookie=function(name){
+    //   let regStr='(^| )'+name+'=([^;]*)(;|$)'
+    //   let regExp=new RegExp(regStr);
+    //     var result=cookies.match(regExp)
+    //     return result?result[2]:[];
+    // }
+    let [vuid,vuser,auth]=[ctx.cookie.get('vuid'),ctx.cookie.get('vuser'),ctx.cookie.get('auth')];
+    if (!vuid||!vuser||!auth) {
       ctx.body={code:"E",msg:"请先登录",redirect:'login'}
-      return;
-    }
-    let getCookie=function(name){
-      let regStr='(^| )'+name+'=([^;]*)(;|$)'
-      let regExp=new RegExp(regStr);
-        var result=cookies.match(regExp)
-        return result?result[2]:[];
-    }
-    let [vuid,vuser,auth]=[getCookie('vuid'),getCookie('vuser'),getCookie('auth')];
-    if (auth) {
+    } else {
       var md5 = crypto.createHash('md5'); 
       let auth2 = md5.update(vuid+'vuser'+vuser).digest('hex'); 
       if (auth==auth2) {
@@ -43,10 +45,7 @@ app.use(async (ctx,next)=>{
       } else {
         ctx.body={code:"E",msg:"请先登录",redirect:'login'}
       }
-    } else {
-      console.log('--------------'+ctx.url)
-      ctx.body={code:"E",msg:"请先登录",redirect:'login'}
-    } 
+    }
   } else {
     await next();
   }
