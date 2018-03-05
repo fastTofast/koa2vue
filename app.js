@@ -55,7 +55,8 @@ app.use(logger())
 app.use(require('koa-static')(__dirname + '/public',{
   setHeaders:function(res, path, stats) {
     //index让它每次都询问服务器是否有更新
-    if (path.indexOf('front\\dist\\index.html')>0) {
+    if (path.match(/front\\dist\\index.html/)) {
+      console.log("path为index.html界面-------: "+path)
       res.setHeader('Cache-Control','no-cache');
     } else {
       res.setHeader('Cache-Control','maxage=604800000');
