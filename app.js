@@ -43,7 +43,7 @@ app.use(async (ctx,next)=>{
         ctx.cookies.set('vuser', vuser,{path:'/',maxAge: 2*60*60*1000});
         await next();
       } else {
-        ctx.body={code:"E",msg:"请先登录",redirect:'login'}
+        ctx.body={code:"E",msg:"请先登录",redirect:'login',toPage:ctx.url}
       }
     }
   } else {

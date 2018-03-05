@@ -20,6 +20,7 @@ router.post('/login', async (ctx, next) => {
     })
     console.log(queryParam)
     try {
+      console.log('---before--')
       let user=await  UserModel.findOne(queryParam);
       console.log(user)
       if(!user){
