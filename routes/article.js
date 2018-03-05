@@ -11,6 +11,16 @@ router.post('/article/publish', async (ctx, next)=> {
   }
   let articleDoc= new ArticleModel(params);
   let result='';
+  if (params.author=='test') {
+    let condition={
+      author:params.author
+    }
+    let count=await ArticleModel.count(condition);
+    if (count>10) {
+      ctx.body={code:'E',msg:'Test 账号最多发布10篇笔记'};
+      return;
+    } 
+  }
   try {
     result=await articleDoc.save();
     ctx.body={code:'S'}
@@ -50,6 +60,7 @@ router.delete('/article/delete',async (ctx ,next)=>{
 
 router.put('/article/edit',async (ctx ,next)=>{
   let params=ctx.request.body;
+  params.author=ctx.cookies.get('vuser');
   try {
     let result=await ArticleModel.update({_id:params._id},{$set:params});
     ctx.body={code:'S',data:result};
