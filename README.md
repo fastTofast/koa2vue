@@ -8,3 +8,5 @@
 3、可以对自己的笔记进行编辑和删除操作<br>
 4、登录退出验证功能<br>
 地址：http://www.nodetop.top/koa2vue/front/dist/index.html
+测试账号：test,密码test 
+ 
