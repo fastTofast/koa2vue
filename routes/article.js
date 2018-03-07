@@ -45,13 +45,13 @@ router.get('/article/list', async (ctx, next)=> {
     ]).catch (error=>{
       throw new Error(error)
     }) 
-    console.log(result)
     ctx.body={total,result}
 })
 router.delete('/article/delete',async (ctx ,next)=>{
   let params=ctx.request.body;
+  let author=ctx.cookies.get('vuser');
   try {
-    let result=await ArticleModel.remove({_id:params._id});
+    let result=await ArticleModel.remove({_id:params._id,author:author});
     ctx.body={code:'S',data:result};
   } catch (error) {
     ctx.body={code:'E',msg:e};
@@ -62,7 +62,7 @@ router.put('/article/edit',async (ctx ,next)=>{
   let params=ctx.request.body;
   params.author=ctx.cookies.get('vuser');
   try {
-    let result=await ArticleModel.update({_id:params._id},{$set:params});
+    let result=await ArticleModel.update({_id:params._id,author:params.author},{$set:params});
     ctx.body={code:'S',data:result};
   } catch (error) {
     ctx.body={code:'E',msg:error};
