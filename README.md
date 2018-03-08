@@ -1,6 +1,6 @@
 # koa2vue
 
-## 前端 使用了vue,elment-UI框架，后端为nodejs,koa2+MongoDB
+## 前端 使用了vue,elment-UI框架，后端为nodejs,koa2+MongoDB,阿里云服务器
  
 项目主要功能为<br>
 1、发布自己的笔记，<br>
