@@ -88,8 +88,9 @@ router.post('/addUser',async (ctx,next)=>{
 })
 router.get('/article/detail', async (ctx, next)=> {
   let params= ctx.request.query;
+  let showField='author tags class creationDate title content'
   //分页查询
-    let result=await ArticleModel.findById(params._id,'content')
+    let result=await ArticleModel.findById(params._id,showField)
     .catch (error=>{
      throw new Error(error)
    }) 
@@ -105,7 +106,7 @@ router.get('/article/list', async (ctx, next)=> {
   let currentPage=Number(params.currentPage);
   let pageSize=Number(params.pageSize);
   let startIndex=pageSize*(currentPage-1);
-  let showField='author tags class creationDate title articleHeader'
+  let showField='author tags class creationDate title'
   //分页查询
    let [result,total]=await Promise.all([
      ArticleModel.find({},showField).skip(startIndex).limit(pageSize),
@@ -115,4 +116,17 @@ router.get('/article/list', async (ctx, next)=> {
    }) 
    ctx.body={total,result}
 })
+router.get('/article/titleList', async (ctx, next)=> {
+  let params= ctx.request.query;
+  console.log(params)
+  let showField='author title'
+  try {
+    //分页查询
+    let data=await ArticleModel.find({author:params.author},showField)
+    ctx.body={articleList:data}
+  } catch (error) {
+    throw new Error(error)
+  }
+})
+
 module.exports = router
