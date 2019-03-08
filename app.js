@@ -18,7 +18,7 @@ app.use(bodyparser({
 }))
 //是否登录
 app.use(async (ctx,next)=>{
-  if (ctx.url.indexOf('/koa2vue/service/')!=-1) {
+  if (ctx.url.indexOf('/weibi/service/')!=-1) {
     // let cookies=ctx.request.header.cookie;
     // console.log(cookies)
     // if (!cookies) {

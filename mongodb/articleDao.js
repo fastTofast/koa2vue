@@ -4,7 +4,7 @@ const dbConfig={
     password:'',
     user:''
 }
-mongoose.connect(dbConfig.TNS+'koa2vue');
+mongoose.connect(dbConfig.TNS+'weibi');
 let Schema=mongoose.Schema;
 let articleSchema=new Schema({
     author:String,
