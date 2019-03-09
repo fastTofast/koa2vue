@@ -22,20 +22,23 @@ async function login(ctx) {
       let user = await UserModel.findOne(queryParam);
       console.log(user);
       if (!user) {
-        ctx.body = { code: "E", msg: "账号或密码错误" };
-        return;
+        ctx.body = { code: "E", msg: "账号密码错误" };
+      } else {
+        var md5_v1 = crypto.createHash("md5");
+        var auth = md5_v1
+          .update(result + "vuser" + params.userName)
+          .digest("hex");
+        let hostname = ctx.hostname + ":8082";
+        ctx.cookies.set("vuid", result, { path: '/', httpOnly: false });
+        ctx.cookies.set("auth", auth, { path: '/', httpOnly: false });
+        ctx.cookies.set("vuser", params.userName, {
+          path: '/',
+          httpOnly: false
+        });
+        ctx.body = { code: "S", user: user };
       }
-      var md5_v1 = crypto.createHash("md5");
-      var auth = md5_v1
-        .update(result + "vuser" + params.userName)
-        .digest("hex");
-      ctx.cookies.set("vuid", result, { path: "/", httpOnly: false });
-      ctx.cookies.set("auth", auth, { path: "/", httpOnly: false });
-      ctx.cookies.set("vuser", params.userName, { path: "/", httpOnly: false });
-      ctx.body = { code: "S", user: user };
     } catch (error) {
       ctx.body = { code: "E", msg: error };
-      throw error;
     }
   }
 }
@@ -121,10 +124,14 @@ async function titleList(ctx) {
     throw new Error(error);
   }
 }
+async function test(ctx) {
+  ctx.body = "Hello";
+}
 module.exports = {
   login,
   addUser,
   detail,
   list,
-  titleList
+  titleList,
+  test
 };

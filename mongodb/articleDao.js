@@ -9,7 +9,7 @@ let Schema=mongoose.Schema;
 let articleSchema=new Schema({
     author:String,
     tags:Array,
-    class:String,
+    kind:String,
     content:String,
     creationDate:String,
     title:String,

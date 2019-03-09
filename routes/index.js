@@ -1,14 +1,18 @@
 const router = require("koa-router")();
+// let servicePath = "../service/indexService";
+// if (process.argv.indexOf("env=dev") !== -1) {
+//   servicePath = "..mock/indexService";
+// }
 var indexService = require("../service/indexService");
 router.prefix("/weibi/publicService");
 
 router.get("/test", async (ctx, next) => {
-  ctx.body = await indexService.test("HHHHHHHHHHH");
+  console.log("/test");
+  await indexService.test(ctx);
 });
-
 //登录
 router.post("/login", async (ctx, next) => {
-  indexService.login(ctx);
+  await indexService.login(ctx);
 });
 router.put("/logout", async (ctx, next) => {
   ctx.cookies.set("vuid", "", { path: "/", httpOnly: false, maxAge: 0 });
@@ -18,21 +22,16 @@ router.put("/logout", async (ctx, next) => {
 });
 //注册
 router.post("/addUser", async (ctx, next) => {
-  indexService.addUser(ctx);
+  await indexService.addUser(ctx);
 });
 router.get("/article/detail", async (ctx, next) => {
-  indexService.detail(ctx);
-});
-router.get("/json", async (ctx, next) => {
-  ctx.body = {
-    title: "koa2 json"
-  };
+  await indexService.detail(ctx);
 });
 router.get("/article/list", async (ctx, next) => {
-  indexService.list(ctx);
+  await indexService.list(ctx);
 });
 router.get("/article/titleList", async (ctx, next) => {
-  indexService.titleList(ctx);
+  await indexService.titleList(ctx);
 });
 
 module.exports = router;

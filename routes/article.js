@@ -3,19 +3,19 @@ router.prefix("/weibi/service");
 const articleService = require("../service/articleService");
 
 router.post("/article/publish", async (ctx, next) => {
-  articleService.publish(ctx);
+  await articleService.publish(ctx);
 });
 
 router.get("/article/list", async (ctx, next) => {
-  articleService.getArticleList(ctx);
+  await articleService.getArticleList(ctx);
 });
 
 router.delete("/article/delete", async (ctx, next) => {
-  articleService.deleteArticle(ctx);
+  await articleService.deleteArticle(ctx);
 });
 
 router.put("/article/edit", async (ctx, next) => {
-  articleService.editArticle(ctx);
+  await articleService.editArticle(ctx);
 });
 
 module.exports = router;
