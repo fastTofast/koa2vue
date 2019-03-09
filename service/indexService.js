@@ -86,7 +86,7 @@ async function addUser(ctx) {
 }
 async function detail(ctx) {
   let params = ctx.request.query;
-  let showField = "author tags class creationDate title content";
+  let showField = "author tags kind creationDate title content";
   //分页查询
   let result = await ArticleModel.findById(params._id, showField).catch(
     error => {
@@ -100,7 +100,7 @@ async function list(ctx) {
   let currentPage = Number(params.currentPage);
   let pageSize = Number(params.pageSize);
   let startIndex = pageSize * (currentPage - 1);
-  let showField = "author tags class creationDate title";
+  let showField = "author tags kind creationDate title";
   //分页查询
   let [result, total] = await Promise.all([
     ArticleModel.find({}, showField)

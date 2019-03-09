@@ -29,7 +29,7 @@ async function getArticleList() {
   let currentPage = Number(params.currentPage);
   let pageSize = Number(params.pageSize);
   let startIndex = pageSize * (currentPage - 1);
-  let showField = "author tags class creationDate title articleHeader";
+  let showField = "author tags kind creationDate title articleHeader";
   let condition = {
     author: ctx.cookies.get("vuser")
   };
