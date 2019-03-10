@@ -29,10 +29,10 @@ async function login(ctx) {
           .update(result + "vuser" + params.userName)
           .digest("hex");
         let hostname = ctx.hostname + ":8082";
-        ctx.cookies.set("vuid", result, { path: '/', httpOnly: false });
-        ctx.cookies.set("auth", auth, { path: '/', httpOnly: false });
+        ctx.cookies.set("vuid", result, { path: "/", httpOnly: false });
+        ctx.cookies.set("auth", auth, { path: "/", httpOnly: false });
         ctx.cookies.set("vuser", params.userName, {
-          path: '/',
+          path: "/",
           httpOnly: false
         });
         ctx.body = { code: "S", user: user };
@@ -100,10 +100,10 @@ async function list(ctx) {
   let currentPage = Number(params.currentPage);
   let pageSize = Number(params.pageSize);
   let startIndex = pageSize * (currentPage - 1);
-  let showField = "author tags kind creationDate title";
+  let showField = "author tags kind content creationDate title";
   //分页查询
   let [result, total] = await Promise.all([
-    ArticleModel.find({}, showField)
+    ArticleModel.find({ shareFlag: true }, showField)
       .skip(startIndex)
       .limit(pageSize),
     ArticleModel.count()

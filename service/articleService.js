@@ -1,4 +1,5 @@
 const Model = require("../mongodb/articleDao");
+const ObjectId = require('mongodb').ObjectID
 const ArticleModel = Model.ArticleModel;
 async function publish(ctx) {
   let params = ctx.request.body;
@@ -7,6 +8,8 @@ async function publish(ctx) {
     ctx.body = { code: "E", msg: "内容太大，请减小" };
     return;
   }
+  params.creationDate=new Date().toLocaleString();
+  params.lastUpdateDate=new Date().toLocaleString();
   let articleDoc = new ArticleModel(params);
   let result = "";
   if (params.author == "test") {
@@ -24,12 +27,12 @@ async function publish(ctx) {
     ctx.body = { code: "E", msg: error };
   }
 }
-async function getArticleList() {
+async function getArticleList(ctx) {
   let params = ctx.request.query;
   let currentPage = Number(params.currentPage);
   let pageSize = Number(params.pageSize);
   let startIndex = pageSize * (currentPage - 1);
-  let showField = "author tags kind creationDate title articleHeader";
+  let showField = "author tags kind creationDate title content";
   let condition = {
     author: ctx.cookies.get("vuser")
   };
@@ -49,10 +52,10 @@ async function deleteArticle(ctx) {
   let params = ctx.request.body;
   let author = ctx.cookies.get("vuser");
   try {
-    let result = await ArticleModel.remove({ _id: params._id, author: author });
+    let result = await ArticleModel.deleteOne({ _id: ObjectId(params.id), author: author });
     ctx.body = { code: "S", data: result };
   } catch (error) {
-    ctx.body = { code: "E", msg: e };
+    ctx.body = { code: "E", msg: error };
   }
 }
 async function editArticle(ctx) {
