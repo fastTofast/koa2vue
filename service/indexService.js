@@ -35,7 +35,7 @@ async function login(ctx) {
           path: "/",
           httpOnly: false
         });
-        ctx.body = { code: "S", user: user };
+        ctx.body = { code: "S", data: user };
       }
     } catch (error) {
       ctx.body = { code: "E", msg: error };
@@ -59,7 +59,7 @@ async function addUser(ctx) {
     }
     let user = await UserModel.findOne({ userName: userName });
     if (user) {
-      ctx.body = { code: "E", msg: "该用户以及存在" };
+      ctx.body = { code: "E", msg: "该用户已经存在" };
       return;
     }
     var md5 = crypto.createHash("md5");
@@ -77,7 +77,7 @@ async function addUser(ctx) {
       ctx.cookies.set("vuid", result, { path: "/", httpOnly: false });
       ctx.cookies.set("auth", auth, { path: "/", httpOnly: false });
       ctx.cookies.set("vuser", params.userName, { path: "/", httpOnly: false });
-      ctx.body = { code: "S", user: user };
+      ctx.body = { code: "S", data: user };
     } catch (error) {
       ctx.body = { code: "E", msg: error };
       throw error;

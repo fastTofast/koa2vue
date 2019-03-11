@@ -18,4 +18,8 @@ router.put("/article/edit", async (ctx, next) => {
   await articleService.editArticle(ctx);
 });
 
+router.put("/article/updatePwd", async (ctx, next) => {
+  await articleService.updatePwd(ctx);
+});
+
 module.exports = router;

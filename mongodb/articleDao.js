@@ -21,7 +21,8 @@ const ArticleModel = mongoose.model("article", articleSchema);
 
 let userSchema = new Schema({
   userName: String,
-  password: String
+  password: String,
+  signStr: String
 });
 const UserModel = mongoose.model("user", userSchema);
 

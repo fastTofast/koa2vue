@@ -18,7 +18,7 @@ router.put("/logout", async (ctx, next) => {
   ctx.cookies.set("vuid", "", { path: "/", httpOnly: false, maxAge: 0 });
   ctx.cookies.set("auth", "", { path: "/", httpOnly: false, maxAge: 0 });
   ctx.cookies.set("vuser", "", { path: "/", httpOnly: false, maxAge: 0 });
-  ctx.body = { code: "S" };
+  ctx.body = { code: "S"};
 });
 //注册
 router.post("/addUser", async (ctx, next) => {

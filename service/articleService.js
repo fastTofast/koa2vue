@@ -1,6 +1,7 @@
 const Model = require("../mongodb/articleDao");
-const ObjectId = require('mongodb').ObjectID
+const ObjectId = require("mongodb").ObjectID;
 const ArticleModel = Model.ArticleModel;
+const UserModel = Model.UserModel;
 async function publish(ctx) {
   let params = ctx.request.body;
   params.author = ctx.cookies.get("vuser"); //此处不用判断，之前的中间件以及判断过
@@ -8,8 +9,8 @@ async function publish(ctx) {
     ctx.body = { code: "E", msg: "内容太大，请减小" };
     return;
   }
-  params.creationDate=new Date().toLocaleString();
-  params.lastUpdateDate=new Date().toLocaleString();
+  params.creationDate = new Date().toLocaleString();
+  params.lastUpdateDate = new Date().toLocaleString();
   let articleDoc = new ArticleModel(params);
   let result = "";
   if (params.author == "test") {
@@ -27,6 +28,25 @@ async function publish(ctx) {
     ctx.body = { code: "E", msg: error };
   }
 }
+
+async function updatePwd(ctx) {
+  let params = ctx.request.body;
+  params.userName = ctx.cookies.get("vuser"); //此处不用判断，之前的中间件以及判断过
+  try {
+    let result = await UserModel.update(
+      { userName: params.userName },
+      { $set: params }
+    );
+    if (result.ok>0) {
+      ctx.body = { code: "S", data: "成功" };
+    }else{
+      ctx.body = { code: "E", data: "更新失败" };
+    }
+  } catch (error) {
+    ctx.body = { code: "E", msg: error };
+  }
+}
+
 async function getArticleList(ctx) {
   let params = ctx.request.query;
   let currentPage = Number(params.currentPage);
@@ -52,7 +72,10 @@ async function deleteArticle(ctx) {
   let params = ctx.request.body;
   let author = ctx.cookies.get("vuser");
   try {
-    let result = await ArticleModel.deleteOne({ _id: ObjectId(params.id), author: author });
+    let result = await ArticleModel.deleteOne({
+      _id: ObjectId(params.id),
+      author: author
+    });
     ctx.body = { code: "S", data: result };
   } catch (error) {
     ctx.body = { code: "E", msg: error };
@@ -76,5 +99,6 @@ module.exports = {
   publish,
   getArticleList,
   deleteArticle,
+  updatePwd,
   editArticle
 };
