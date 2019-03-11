@@ -104,6 +104,7 @@ async function list(ctx) {
   //分页查询
   let [result, total] = await Promise.all([
     ArticleModel.find({ shareFlag: true }, showField)
+      .sort({ creationDate: -1 })
       .skip(startIndex)
       .limit(pageSize),
     ArticleModel.count()

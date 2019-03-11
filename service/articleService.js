@@ -37,9 +37,9 @@ async function updatePwd(ctx) {
       { userName: params.userName },
       { $set: params }
     );
-    if (result.ok>0) {
+    if (result.ok > 0) {
       ctx.body = { code: "S", data: "成功" };
-    }else{
+    } else {
       ctx.body = { code: "E", data: "更新失败" };
     }
   } catch (error) {
@@ -59,6 +59,7 @@ async function getArticleList(ctx) {
   //分页查询
   let [result, total] = await Promise.all([
     ArticleModel.find(condition, showField)
+      .sort({ creationDate: -1 })
       .skip(startIndex)
       .limit(pageSize),
     ArticleModel.count(condition)
