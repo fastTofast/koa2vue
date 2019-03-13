@@ -43,46 +43,47 @@ async function login(ctx) {
   }
 }
 async function addUser(ctx) {
-  var params = ctx.request.body;
-  console.log(params);
-  let [userName, password] = [params.userName, params.password];
-  if (!userName || !password) {
-    ctx.body = { code: "E", msg: "密码或账号不能为空" };
-  } else {
-    if (password.length > 8) {
-      ctx.body = { code: "E", msg: "密码太长，最大6个字符" };
-      return;
-    }
-    if (userName.length > 6) {
-      ctx.body = { code: "E", msg: "账号太长，最大8个字符" };
-      return;
-    }
-    let user = await UserModel.findOne({ userName: userName });
-    if (user) {
-      ctx.body = { code: "E", msg: "该用户已经存在" };
-      return;
-    }
-    var md5 = crypto.createHash("md5");
-    var result = md5.update("2" + params.password + "b").digest("hex");
-    let userModel = new UserModel({
-      userName: params.userName,
-      password: result
-    });
-    try {
-      let user = await userModel.save();
-      var md5_v1 = crypto.createHash("md5");
-      var auth = md5_v1
-        .update(result + "vuser" + params.userName)
-        .digest("hex");
-      ctx.cookies.set("vuid", result, { path: "/", httpOnly: false });
-      ctx.cookies.set("auth", auth, { path: "/", httpOnly: false });
-      ctx.cookies.set("vuser", params.userName, { path: "/", httpOnly: false });
-      ctx.body = { code: "S", data: user };
-    } catch (error) {
-      ctx.body = { code: "E", msg: error };
-      throw error;
-    }
-  }
+  ctx.body={code:'E',msg:'注册功能暂停使用'};
+  // var params = ctx.request.body;
+  // console.log(params);
+  // let [userName, password] = [params.userName, params.password];
+  // if (!userName || !password) {
+  //   ctx.body = { code: "E", msg: "密码或账号不能为空" };
+  // } else {
+  //   if (password.length > 8) {
+  //     ctx.body = { code: "E", msg: "密码太长，最大6个字符" };
+  //     return;
+  //   }
+  //   if (userName.length > 6) {
+  //     ctx.body = { code: "E", msg: "账号太长，最大8个字符" };
+  //     return;
+  //   }
+  //   let user = await UserModel.findOne({ userName: userName });
+  //   if (user) {
+  //     ctx.body = { code: "E", msg: "该用户已经存在" };
+  //     return;
+  //   }
+  //   var md5 = crypto.createHash("md5");
+  //   var result = md5.update("2" + params.password + "b").digest("hex");
+  //   let userModel = new UserModel({
+  //     userName: params.userName,
+  //     password: result
+  //   });
+  //   try {
+  //     let user = await userModel.save();
+  //     var md5_v1 = crypto.createHash("md5");
+  //     var auth = md5_v1
+  //       .update(result + "vuser" + params.userName)
+  //       .digest("hex");
+  //     ctx.cookies.set("vuid", result, { path: "/", httpOnly: false });
+  //     ctx.cookies.set("auth", auth, { path: "/", httpOnly: false });
+  //     ctx.cookies.set("vuser", params.userName, { path: "/", httpOnly: false });
+  //     ctx.body = { code: "S", data: user };
+  //   } catch (error) {
+  //     ctx.body = { code: "E", msg: error };
+  //     throw error;
+  //   }
+  // }
 }
 async function detail(ctx) {
   let params = ctx.request.query;
